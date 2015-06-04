@@ -1,4 +1,4 @@
-Operative System- Proccess Management Proyect
+Operative System- Process Management Proyect
 =======================
 
 In this activity we have to implement several exercises related to proccess management in Unix. 
