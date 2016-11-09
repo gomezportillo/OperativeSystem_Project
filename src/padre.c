@@ -14,15 +14,15 @@ void killChildProccesses(int signum);
 int main(int argc, char *argv[]){
 
 	if (argc != 2 ){ 	/*Basic error handling*/
-		fprintf(stderr, "[Proceso padre] Error in number of arguments\n"); 
+		fprintf(stderr, "[Proceso padre] Error in number of arguments\n");
 		_exit(EXIT_FAILURE);
-	} 
+	}
 
 	int i;
 	pid_t child_pid;
-	
+
 	for(i = 0; i < PROC_NUMB; i++) children_pid[i] = 0; /* matrix initialization */
-	
+
 	if(signal(SIGINT,killChildProccesses) == SIG_ERR){ /* Ctrl+C handler */
 		fprintf(stderr,"[Proceso padre] Error in handling Ctrl+C\n");
 		_exit(EXIT_FAILURE);
@@ -33,21 +33,21 @@ int main(int argc, char *argv[]){
 		switch(child_pid = fork()){
 
 			case -1:
-				fprintf(stderr,"[Proceso padre] Error in fork()\n");
-				_exit(EXIT_FAILURE);
-				break;
-				
-			case 0: //the program is though to be executed while being in proyect root directory
-				if(execl("exec/hijo.exe", "hijo.exe", argv[1], (char *)0) != 0)	// run the program
-					if(execl("hijo.exe", "hijo.exe", argv[1], (char *)0) != 0){	//just in case we are in exec/ directory
-						fprintf(stderr,"[Proceso padre] Error in child execution\n");
-						_exit(EXIT_FAILURE);
-				}
+			fprintf(stderr,"[Proceso padre] Error in fork()\n");
+			_exit(EXIT_FAILURE);
 			break;
-			
-			default: 
-				children_pid[i] = child_pid; //save its pid in case we have to kill our own child
-			break; 
+
+			case 0: //the program is though to be executed while being in proyect root directory
+			if(execl("exe/hijo", "hijo", argv[1], (char *)0) != 0)	// run the program
+			if(execl("hijo", "hijo", argv[1], (char *)0) != 0){	//just in case we are in exec/ directory
+				fprintf(stderr,"[Proceso padre] Error in child execution\n");
+				_exit(EXIT_FAILURE);
+			}
+			break;
+
+			default:
+			children_pid[i] = child_pid; //save its pid in case we have to kill our own child
+			break;
 		}
 	}
 
@@ -61,21 +61,21 @@ int main(int argc, char *argv[]){
 }
 
 
-void killChildProccesses(int signum = 0){
-		int i;
-		
-		for(i= 0; i < PROC_NUMB; i++){ //go through the matrix
-			if(children_pid[i] != 0){ //if the slot has a valid pid
-				if(kill(children_pid[i],SIGINT) != 0){ //sending signal & error handling
-					fprintf(stderr,"[Proceso padre] Error killing child proccess %d\n",children_pid[i]);
-					_exit(EXIT_FAILURE);
-				}
-				printf("[Proceso padre] killed child proccess with pid %d \n",children_pid[i]);
-				children_pid[i] = 0; //rm its pid from the matrix
+void killChildProccesses(int signum){
+	int i;
+
+	for(i= 0; i < PROC_NUMB; i++){ //go through the matrix
+		if(children_pid[i] != 0){ //if the slot has a valid pid
+			if(kill(children_pid[i],SIGINT) != 0){ //sending signal & error handling
+				fprintf(stderr,"[Proceso padre] Error killing child proccess %d\n",children_pid[i]);
+				_exit(EXIT_FAILURE);
 			}
+			printf("[Proceso padre] killed child proccess with pid %d \n",children_pid[i]);
+			children_pid[i] = 0; //rm its pid from the matrix
 		}
-		
+	}
+
 	printf("[Proceso padre] finaliza\n");
-		
+
 	_exit(EXIT_FAILURE);
 }

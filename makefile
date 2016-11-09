@@ -1,31 +1,35 @@
-#all: exec/escudo1.exe exec/escudo2.exe exec/escudo3.exe exec/alarma.exe exec/mikill.exe exec/entrada.exe exec/salida.exe exec/tuberia.exe exec/consumidor.exe exec/mimkfifo.exe exec/padre.exe exec/hijo.exe
+# -*- mode:make -*-
 
-all: $(patsubst src/%.cpp, exec/%.exe, ${wildcard src/*.cpp}) 
+DIRSRC	:= src/
+DIROBJ	:= obj/
+DIREXE	:= exe/
 
-exec/%.exe: obj/%.o 
-	@gcc $< -o $@
-	@echo ""$@" compiled succesfully!"
+CXX 	:= gcc
+CXXFLAGS:= -Wall
 
-obj/%.o: src/%.cpp
-	@gcc -Wall -c $< -o $@
+SRC	:= $(wildcard $(DIRSRC)*.c)
+OBJ	:= $(patsubst $(DIRSRC)%.c, $(DIROBJ)%.o, $(SRC))
+EXE	:= $(patsubst $(DIROBJ)%.o, $(DIREXE)%, $(OBJ))
 
+all: $(EXE)
 
-#See webgraphy num3
-.SECONDARY: $(wildcard obj/*.o) 
+# Linking
+$(DIREXE)%: $(DIROBJ)%.o
+	@$(CXX) $< -o $@
+	@echo $@ compiled and linked
 
-#In case case we have a file called clean
+# Compilation
+$(DIROBJ)%.o: $(DIRSRC)%.c
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .PHONY: clean
 
-clean: cleanobj cleanexec
-	@echo "Directories obj/*.o and exec/*.exe cleaned"
+.SECONDARY: $(wildcard obj/*.o)
 
-cleanobj: 
-	@rm -f obj/*.o	
+clean:
+	@$(RM) $(DIROBJ)* $(DIREXE)*
+	@echo "Directories "$(DIROBJ)" and "$(DIREXE)" cleaned"
 
-cleanexec: 
-	@rm -f exec/*.exe
-	
-	
 #Webgraphy
 #1. http://mrbook.org/tutorials/make/
 #2. http://www.puxan.com/web/blog/HowTo-Write-Generic-Makefiles

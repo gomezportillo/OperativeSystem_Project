@@ -7,23 +7,23 @@
 
 int counter = 0;	// number of alarms called
 
-void print_message(int signal = 0){ 	//argument necessary but never used
-	printf("Alarma %d\n", ++counter); 
+void print_message(int signal){ 	//argument necessary but never used
+	printf("Alarma %d\n", ++counter);
 }
 
 int main(int argc, char *argv[]){
-	
+
 	if (argc != 2 ){ /*Basic error handling*/
-		fprintf(stderr, "Error in number of arguments\n"); 
-		_exit(EXIT_FAILURE); } 
-	
+		fprintf(stderr, "Error in number of arguments\n");
+		_exit(EXIT_FAILURE); }
+
 	int n_sec;
-	
+
 	if((n_sec= atoi(argv[1])) <= 0){  	//the number of waiting seconds
 		fprintf(stderr,"Invalid number of sec\n");
 		_exit(EXIT_FAILURE);
 	}
-	
+
 	if (signal(SIGALRM, print_message) == SIG_ERR){
 		fprintf(stderr,"Error caughting the alarm\n");
 		_exit(EXIT_FAILURE);
@@ -37,4 +37,3 @@ int main(int argc, char *argv[]){
 	_exit(EXIT_SUCCESS); //the program will nevah reach this point
 
 }
-	

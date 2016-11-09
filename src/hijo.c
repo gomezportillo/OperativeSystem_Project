@@ -5,10 +5,10 @@
 #include <time.h> /* time() */
 
 int main(int argc, char *argv[]){
-	
+
 	/* Program executed by padre.exe */
 	/* No error in number of args handler needed */
-	
+
 	/* Intializes random number generator */ //http://www.tutorialspoint.com/c_standard_library/c_function_srand.htm
 	time_t t;
 	srand((unsigned) time(&t));
@@ -17,9 +17,9 @@ int main(int argc, char *argv[]){
 
 	printf("[Proceso %d] duerme %d segundos\n", getpid(), rand_sec);
 
-	sleep(rand_sec); 
-	
-	printf("[Proceso %d] finaliza\n",getpid());
+	sleep(rand_sec);
 
-  	return EXIT_SUCCESS;
+	printf("[Proceso %d] finaliza\n",getpid());
+	
+	return EXIT_SUCCESS;
 }
